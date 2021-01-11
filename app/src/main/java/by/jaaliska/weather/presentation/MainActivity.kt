@@ -2,11 +2,9 @@ package by.jaaliska.weather.presentation
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
-import android.view.View
+import android.util.Log
 import by.jaaliska.weather.R
 import by.jaaliska.weather.domain.MainViewModel
-import com.google.android.material.snackbar.Snackbar
 
 class MainActivity : AppCompatActivity() {
 
@@ -18,24 +16,12 @@ class MainActivity : AppCompatActivity() {
         viewModel.onCreate()
     }
 
-
-    fun showSnackbar(
-            mainTextString: String, actionString: String,
-            listener: View.OnClickListener
-    ) {
-        val contextView = findViewById<View>(R.id.context_view)
-        Snackbar.make(contextView, mainTextString, Snackbar.LENGTH_INDEFINITE)
-                .setAction(actionString) {
-                    listener.onClick(contextView)
-                }
-                .show()
-    }
-
-
     override fun onRequestPermissionsResult(
             requestCode: Int, permissions: Array<String>,
             grantResults: IntArray
     ) {
-        viewModel.getLocation().onRequestPermissionsResult(requestCode, permissions, grantResults)
+        Log.i("MainActivity",
+                "---------------------->>>> onRequestPermissionsResult")
+        viewModel.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 }

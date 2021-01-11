@@ -11,16 +11,17 @@ import android.provider.Settings
 import android.util.Log
 import android.view.View
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat.startActivity
 import by.jaaliska.weather.R
-import by.jaaliska.weather.presentation.MainActivity
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.snackbar.Snackbar
-import io.reactivex.Observable
-import java.util.*
 
 class LocationServiceImpl : LocationService {
+    private var fusedLocationClient: FusedLocationProviderClient? = null
+    private var latitude: Double? = null
+    private var longitude: Double? = null
+    private lateinit var activity: Activity
+
     override fun getLongitude(): Double {
         if (longitude != null) {
             return longitude as Double
@@ -36,11 +37,6 @@ class LocationServiceImpl : LocationService {
             throw ExceptionInInitializerError("Latitude is not initialised")
         }
     }
-
-    private var fusedLocationClient: FusedLocationProviderClient? = null
-    private var latitude: Double? = null
-    private var longitude: Double? = null
-    private lateinit var activity: Activity
 
     fun setLocation(activity: Activity) {
         this.activity = activity
