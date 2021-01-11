@@ -20,8 +20,8 @@ interface YandexWeatherService {
     @GET("v2/forecast?")
     //fun loadRepo(): Call<WeatherModel>
     fun getWeatherDataByCity(
-            @Query("lat") lat: Float,
-            @Query("lon") lon: Float,
+            @Query("lat") lat: Double?,
+            @Query("lon") lon: Double?,
             @Query("hours") hours: Boolean,
             @Query("limit") limit: Int
     ): Observable<YandexWeatherModel>

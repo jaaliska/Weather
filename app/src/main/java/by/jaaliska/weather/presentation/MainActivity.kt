@@ -1,47 +1,41 @@
 package by.jaaliska.weather.presentation
 
-import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.widget.Toast
+import android.os.Handler
+import android.view.View
 import by.jaaliska.weather.R
-import by.jaaliska.weather.data.yandexData.YandexWeatherModel
-import by.jaaliska.weather.repository.server.YandexWeatherService
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.functions.Consumer
-import io.reactivex.schedulers.Schedulers
+import by.jaaliska.weather.domain.MainViewModel
+import com.google.android.material.snackbar.Snackbar
 
 class MainActivity : AppCompatActivity() {
 
-    private val yandexWeatherService: YandexWeatherService = YandexWeatherService.getApiYandexWeather()
+    private val viewModel = MainViewModel(this)
 
-    @SuppressLint("CheckResult")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        yandexWeatherService.getWeatherDataByCity(
-            55.751244F,
-            37.618423F,
-                false,
-                1
-        )
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : Consumer<YandexWeatherModel> {
-                override fun accept(t: YandexWeatherModel?) {
-                    Toast.makeText(
-                        this@MainActivity,
-                        t?.getTemp().toString() +" " + t?.getCity(),
-                        Toast.LENGTH_LONG
-                    ).show()
-                    Log.i("ПОЛУЧЕНО ------------->>>>>>>>: ", t?.getTemp().toString() +" " + t?.getCity())
+        viewModel.onCreate()
+    }
+
+
+    fun showSnackbar(
+            mainTextString: String, actionString: String,
+            listener: View.OnClickListener
+    ) {
+        val contextView = findViewById<View>(R.id.context_view)
+        Snackbar.make(contextView, mainTextString, Snackbar.LENGTH_INDEFINITE)
+                .setAction(actionString) {
+                    listener.onClick(contextView)
                 }
-            }, object :Consumer<Throwable> {
-                override fun accept(t: Throwable?) {
-                    Log.i("ВНИМАНИЕ ОШИБКА: ", t?.message.toString())
-                }
-            }
-            )
+                .show()
+    }
+
+
+    override fun onRequestPermissionsResult(
+            requestCode: Int, permissions: Array<String>,
+            grantResults: IntArray
+    ) {
+        viewModel.getLocation().onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 }
