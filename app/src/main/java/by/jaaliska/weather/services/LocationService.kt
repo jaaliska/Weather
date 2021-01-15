@@ -1,9 +1,12 @@
 package by.jaaliska.weather.services
 
+import by.jaaliska.weather.data.LocationModel
+import io.reactivex.Observable
+
 interface LocationService {
-    fun getLongitude(): Double
-    fun getLatitude(): Double
-    fun onRequestPermissionsResult(
-            requestCode: Int, permissions: Array<String>,
-            grantResults: IntArray)
+    fun getLocationModel(): Observable<LocationModel>
+
+//    fun onRequestPermissionsResult(
+//            requestCode: Int, permissions: Array<String>,
+//            grantResults: IntArray)
 }

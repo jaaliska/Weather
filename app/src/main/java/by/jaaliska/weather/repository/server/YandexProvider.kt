@@ -2,36 +2,26 @@ package by.jaaliska.weather.repository.server
 
 import android.annotation.SuppressLint
 import android.util.Log
-import by.jaaliska.weather.data.yandexData.YandexWeatherModel
+import by.jaaliska.weather.data.LocationModel
+import by.jaaliska.weather.data.WeatherModel
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
 
 class YandexProvider {
+    ///общий интерфейс и Adapter привести к общей модели
     private val yandexWeatherService: YandexWeatherService = YandexWeatherService.getApiYandexWeather()
 
-    @SuppressLint("CheckResult")
-    fun setYandexWeather(latitude: Double, longitude: Double) {
-        yandexWeatherService.getWeatherDataByCity(
-                latitude,
-                longitude,
+    fun getWeather(location: LocationModel): Observable<WeatherModel> {
+        return yandexWeatherService.getWeatherDataByCity(
+            location.getLatitude(),
+            location.getLongitude(),
                 false,
                 1
         )
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(object : Consumer<YandexWeatherModel> {
-                    override fun accept(t: YandexWeatherModel?) {
-                        Log.i(
-                                "YANDEX ",
-                                "temperature:" + t?.getTemp().toString() + " city: " + t?.getCity()
-                        )
-                    }
-                }, object : Consumer<Throwable> {
-                    override fun accept(t: Throwable?) {
-                        Log.i("YANDEX EXCEPTION ", t?.message.toString())
-                    }
-                }
-                )
+                .map { yw -> WeatherModel(yw.getTemp().toDouble()) }
+
     }
 }
