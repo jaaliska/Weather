@@ -11,11 +11,11 @@ import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.Query
 
-interface YandexWeatherService {
+interface YandexService {
     @Headers("X-Yandex-API-Key: 68035504-1059-4a1f-b374-6f82bb5a34aa")
     @GET("v2/forecast?")
     //fun loadRepo(): Call<WeatherModel>
-    fun getWeatherDataByCity(
+    fun getWeatherDataByLocation(
             @Query("lat") lat: Double?,
             @Query("lon") lon: Double?,
             @Query("hours") hours: Boolean,
@@ -35,8 +35,8 @@ interface YandexWeatherService {
             return retrofitBuilder.build()
         }
 
-        fun getApiYandexWeather(): YandexWeatherService {
-            return getRetrofit().create(YandexWeatherService::class.java)
+        fun getYandexApi(): YandexService {
+            return getRetrofit().create(YandexService::class.java)
         }
     }
 }

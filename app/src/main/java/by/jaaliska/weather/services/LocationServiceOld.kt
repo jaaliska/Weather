@@ -16,10 +16,6 @@ import by.jaaliska.weather.data.LocationModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.snackbar.Snackbar
-import io.reactivex.Observable
-import io.reactivex.Single
-import io.reactivex.subjects.AsyncSubject
-import kotlin.math.sin
 
 class LocationServiceOld  {
     private var fusedLocationClient: FusedLocationProviderClient? = null
@@ -37,16 +33,16 @@ class LocationServiceOld  {
         }
     }
 
-//    fun getLocation(activity: Activity): Observable<LocationModel> { //return Observeble<Location?>
-//        locationModel = null
-//        this.activity = activity
-//        if (!checkPermissions()) {
-//            requestPermissions()
-//        } else {
-//            getLastLocation()
-//        }
-//        return single
-//    }
+ //   fun getLocation(activity: Activity): Observable<LocationModel> { //return Observeble<Location?>
+ //       locationModel = null
+ //       this.activity = activity
+ //       if (!checkPermissions()) {
+ //           requestPermissions()
+ //       } else {
+ //           getLastLocation()
+ //       }
+ //       return single
+ //   }
 
     private fun checkPermissions(): Boolean {
         return (ActivityCompat.checkSelfPermission(
@@ -100,7 +96,7 @@ class LocationServiceOld  {
             mainTextString: String, actionString: String,
             listener: View.OnClickListener
     ) {
-        val contextView = activity.findViewById<View>(R.id.context_view)
+        val contextView = activity.findViewById<View>(R.id.main_activity_view)
         Snackbar.make(contextView, mainTextString, Snackbar.LENGTH_INDEFINITE)
                 .setAction(actionString) {
                     listener.onClick(contextView)

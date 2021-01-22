@@ -3,23 +3,22 @@ package by.jaaliska.weather.repository.server
 import by.jaaliska.weather.data.LocationModel
 import by.jaaliska.weather.data.WeatherModel
 import io.reactivex.Observable
-import io.reactivex.ObservableSource
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
-class YandexProvider : WeatherProvider {
+class OpenWeatherProvider : WeatherProvider {
 
-    private val yandexService: YandexService = YandexService.getYandexApi()
+    private val openWeatherService: OpenWeatherService = OpenWeatherService.getOpenWeatherApi()
 
     override fun getWeather(location: LocationModel): Observable<WeatherModel> {
-        return yandexService.getWeatherDataByLocation(
+        return openWeatherService.getWeatherDataByLocation(
             location.getLatitude(),
             location.getLongitude(),
-            false,
-            1
+            "60ee362b89fd4b6368ea3f8dc097a064",
+            "metric"
         )
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .map { yw -> WeatherModel("Yandex", yw.getTemp().toDouble()) }
+            .map { ow -> WeatherModel("Open Weather", ow.getTemp()) }
     }
 }

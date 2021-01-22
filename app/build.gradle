@@ -1,7 +1,7 @@
-
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -24,6 +24,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    buildFeatures {
+        dataBinding true
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -54,7 +59,10 @@ dependencies {
     //RX
     implementation "io.reactivex.rxjava2:rxandroid:2.1.1"
     implementation "io.reactivex.rxjava2:rxkotlin:2.4.0"
+    implementation "com.github.tbruyelle:rxpermissions:0.11" //version 0.12 is working with RxJava3
 
     //Location
-    implementation "com.google.android.gms:play-services-location:17.1.0"
+    implementation "pl.charmas.android:android-reactive-location2:2.1"
+
+
 }

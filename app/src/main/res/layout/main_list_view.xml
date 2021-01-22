@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="model"
+            type="by.jaaliska.weather.data.WeatherModel"/>
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/text_listView_weatherModel_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:text="@{model.whetherProviderName}"
+            tools:text="Provider"
+            android:textSize="30sp" />
+        <!--            android:text="@{model.whetherProviderName}"-->
+
+        <TextView
+            android:id="@+id/text_listView_weatherModel_temperature"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:text="@{model.temperature}"
+            tools:text="-20"
+            android:textSize="50sp" />
+        <!--            android:text="@{model.temperature}"-->
+    </LinearLayout>
+</layout>

@@ -1,35 +1,37 @@
 package by.jaaliska.weather.services
 
+import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Activity
-import android.content.Context
-import android.location.Location
-import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import by.jaaliska.weather.data.LocationModel
-import com.google.android.gms.location.LocationServices
+import by.jaaliska.weather.exceptions.LocationAccessDeniedException
+import com.tbruyelle.rxpermissions2.RxPermissions
 import io.reactivex.Observable
-import io.reactivex.subjects.AsyncSubject
+import pl.charmas.android.reactivelocation2.ReactiveLocationProvider
 import java.lang.Exception
 
-class LocationServiceImpl(private val context: Context): LocationService {
 
-    override fun getLocationModel(): Observable<LocationModel> {
-        val subject = AsyncSubject.create<LocationModel>()
-        getLastLocation(subject)
-
-        return subject
-    }
+class LocationServiceImpl(
+    private val activity: AppCompatActivity
+) : LocationService {
+    private val rxPermissions = RxPermissions(activity)
 
     @SuppressLint("MissingPermission")
-    private fun getLastLocation(subject: AsyncSubject<LocationModel>) {
-        LocationServices.getFusedLocationProviderClient(context).lastLocation
-                .addOnSuccessListener { location: Location? ->
-                    if (location == null) {
-                        subject.onError(Exception("location not found"))
-                    } else {
-                        subject.onNext(LocationModel(location.latitude, location.longitude))
-                        subject.onComplete()
-                    }
-                }
+    override fun getLocationModel(): Observable<LocationModel> {
+        return rxPermissions
+            .request(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            )
+            .flatMap { granted -> if (granted)
+                    ReactiveLocationProvider(activity)
+                        .lastKnownLocation
+                        .map {location ->
+                            LocationModel(location.latitude, location.longitude)}
+                else
+                    Observable.error(LocationAccessDeniedException(
+                            "Allow getting the location in the \"settings -> permissions\""
+                    ))
+            }
     }
 }

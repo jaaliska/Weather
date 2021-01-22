@@ -1,10 +1,11 @@
-package by.jaaliska.weather.data.yandexData
+package by.jaaliska.weather.data.openWeather
+
 
 import com.google.gson.annotations.SerializedName
 
-data class Fact(
+data class Main(
     @SerializedName("temp")
-    private val temp: Float
+    private val temp: Double
 ) {
     fun getTemp() = temp
 }
