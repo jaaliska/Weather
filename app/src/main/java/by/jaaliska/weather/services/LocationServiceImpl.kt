@@ -8,16 +8,14 @@ import by.jaaliska.weather.exceptions.LocationAccessDeniedException
 import com.tbruyelle.rxpermissions2.RxPermissions
 import io.reactivex.Observable
 import pl.charmas.android.reactivelocation2.ReactiveLocationProvider
-import java.lang.Exception
 
 
-class LocationServiceImpl(
-    private val activity: AppCompatActivity
-) : LocationService {
-    private val rxPermissions = RxPermissions(activity)
+class LocationServiceImpl: LocationService {
+
 
     @SuppressLint("MissingPermission")
-    override fun getLocationModel(): Observable<LocationModel> {
+    override fun getLocationModel(activity: AppCompatActivity): Observable<LocationModel> {
+        val rxPermissions = RxPermissions(activity)
         return rxPermissions
             .request(
                 Manifest.permission.ACCESS_FINE_LOCATION,

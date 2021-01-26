@@ -1,11 +1,11 @@
 package by.jaaliska.weather.presentation
 
+import android.app.Activity
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import by.jaaliska.weather.R
@@ -19,19 +19,27 @@ import io.reactivex.functions.Consumer
 
 class MainActivity : AppCompatActivity() {
 
-    private val viewModel = MainViewModel(this, R.layout.activity_main)
+    private val viewModel: MainViewModel by viewModels()
     private lateinit var snackBars: Disposable
+    private lateinit var listViewAdapter: ListViewAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val binding: ActivityMainBinding = DataBindingUtil.setContentView(
+            this,
+            R.layout.activity_main
+        )
+        binding.vm = viewModel
+        listViewAdapter = ListViewAdapter(applicationContext, viewModel.getListAdapter())
+        binding.listView.adapter = listViewAdapter
+
         snackBars = viewModel.snackBars.subscribe(
                 Consumer {
-                    showSnackbar(it.mainTextString, it.actionString, it.listener)
+                    showSnackbar(it.mainTextString, it.actionString, it.actionCallback)
                 }
         )
-        viewModel.onCreate()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -41,7 +49,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.ic_main_menu) {
-            viewModel.onRefreshClick()
+            viewModel.onRefreshClick(this)
         }
         return true
     }
@@ -49,21 +57,21 @@ class MainActivity : AppCompatActivity() {
     private fun showSnackbar(
         mainTextString: String,
         actionString: String?,
-        listener: View.OnClickListener?
+        actionCallback: ((Activity) -> Unit)?
     ) {
         val contextView = findViewById<View>(R.id.main_activity_view)
         val sb = Snackbar.make(contextView, mainTextString, Snackbar.LENGTH_LONG)
-        if (actionString != null && listener != null) {
+        if (actionString != null && actionCallback != null) {
             sb.setAction(actionString) {
-                listener.onClick(contextView)
+                actionCallback(this)
             }
         }
         sb.show()
     }
 
     override fun onDestroy() {
-        viewModel.onDestroy()
         snackBars.dispose()
+        listViewAdapter.onDestroy()
         super.onDestroy()
     }
 }

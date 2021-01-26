@@ -1,9 +1,9 @@
 package by.jaaliska.weather.domain
 
-import android.view.View
+import android.app.Activity
 
 data class SnackBarInfo(
         val mainTextString: String,
         val actionString: String?,
-        val listener: View.OnClickListener?
+        val actionCallback: (Activity) -> Unit
 )
