@@ -59,16 +59,21 @@ dependencies {
     //RX
     implementation "io.reactivex.rxjava2:rxandroid:2.1.1"
     implementation "io.reactivex.rxjava2:rxkotlin:2.4.0"
-    implementation "com.github.tbruyelle:rxpermissions:0.11" //version 0.12 is working with RxJava3
+    implementation "com.github.tbruyelle:rxpermissions:0.11" //version 0.12 works with RxJava3
 
     //Location
     implementation "pl.charmas.android:android-reactive-location2:2.1"
 
     //Dagger 2
-    def daggerVersion = '2.28'
+    def daggerVersion = '2.31.2'
     implementation "com.google.dagger:dagger:$daggerVersion"
-    annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
+    kapt "com.google.dagger:dagger-compiler:$daggerVersion"
+   // implementation "com.google.dagger:dagger-android:$daggerVersion"
+   // implementation "com.google.dagger:dagger-android-support:$daggerVersion"
+   // kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
 
+
+    //MVVM
     def activity_version = "1.1.0"
     implementation "androidx.activity:activity-ktx:$activity_version"
 }
